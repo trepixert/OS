@@ -16,9 +16,12 @@ public class MemoryManager {
      * Метод, отвечающий за помещение страницы в ОЗУ из файла подкачки, либо просто загрузить
      * сначала проверяет, есть ли эта страница в swap
      * @see MemoryManager#findInSwapMemory(Page)
-     *
-     * @param indexOfPage
-     * @throws Exception
+     * если нет, то ищет свободное место в ОЗУ
+     * @see MemoryManager#getFreeIndex(Page[])
+     * если свободного места нет, то запускается процесс замещения
+     * @see MemoryManager#swapProcess()
+     * @param indexOfPage индекс страницы в виртуальной памяти
+     * @throws Exception если места в озу и файле подкачки нет, для загрузки страницы в ОЗУ, то выкинет исключение
      */
     public void setToPhysicalMemory(int indexOfPage) throws Exception {
         int index = 0;
