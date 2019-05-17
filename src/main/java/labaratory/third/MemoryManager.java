@@ -104,9 +104,6 @@ public class MemoryManager {
      * @return индекс страничного блока ОЗУ, который освободился
      */
     private int swapProcess() {
-        /*
-            @TODO: Алгоритм исключения недавно изменившейся страницы
-         */
         for (int i = 0; i < physicalMemory.length; i++) {
             Page page = physicalMemory[i];
             if ((page.getModificationBit() == 0 && page.getReadBit() == 0) ||
