@@ -24,7 +24,7 @@ public class MemoryManager {
      * @throws Exception если места в озу и файле подкачки нет, для загрузки страницы в ОЗУ, то выкинет исключение
      */
     public void setToPhysicalMemory(int indexOfPage) throws Exception {
-        int index = 0;
+        int index;
         Page pageBlock = virtualMemoryOfCurrentProcess[indexOfPage];
         if (findInSwapMemory(pageBlock)) return;
         index = getFreeIndex(physicalMemory);
@@ -38,7 +38,6 @@ public class MemoryManager {
             }
             physicalMemory[index] = pageBlock;
         }
-        pageBlock.setPresenceAndAbsenseBit(1);
         pageBlock.setPresenceAndAbsenseBit(1);
         pageBlock.setIndexAtPhysicalMemory(index);
         pageBlock.setIndexAtSwapMemory(-1);
@@ -57,34 +56,28 @@ public class MemoryManager {
         int index;
         for (int i = 0; i < swapMemory.length; i++) {
             if (swapMemory[i] == pageBlock) {
-
                 index = getFreeIndex(physicalMemory);
                 if(index == -1){
                     index = swapProcess();
-                    Page page = physicalMemory[index];
-                    physicalMemory[index] = pageBlock;
-                    pageBlock.setIndexAtPhysicalMemory(index);
-                    pageBlock.setDescription("loadedToRAM");
-                    pageBlock.setIndexAtSwapMemory(-1);
-                    page.setPresenceAndAbsenseBit(1);
-
-                    swapMemory[i] = page;
-                    page.setIndexAtPhysicalMemory(-1);
-                    page.setIndexAtSwapMemory(i);
-                    page.setDescription("loadedToSwap");
-                    page.setPresenceAndAbsenseBit(0);
+                    initPageInPhysicalMemory(pageBlock, index);
+                    swapMemory[i] = null;
                     return true;
                 }else{
-                    physicalMemory[index] = pageBlock;
-                    pageBlock.setPresenceAndAbsenseBit(1);
-                    pageBlock.setIndexAtPhysicalMemory(index);
-                    pageBlock.setIndexAtSwapMemory(-1);
-                    pageBlock.setDescription("loadedToRAM");
+                    initPageInPhysicalMemory(pageBlock, index);
+                    swapMemory[i] = null;
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    private void initPageInPhysicalMemory(Page pageBlock, int index) {
+        physicalMemory[index] = pageBlock;
+        pageBlock.setPresenceAndAbsenseBit(1);
+        pageBlock.setIndexAtPhysicalMemory(index);
+        pageBlock.setIndexAtSwapMemory(-1);
+        pageBlock.setDescription("loadedToRAM");
     }
 
     /**
@@ -109,23 +102,44 @@ public class MemoryManager {
     private int swapProcess() {
         for (int i = 0; i < physicalMemory.length; i++) {
             Page page = physicalMemory[i];
-            if ((page.getModificationBit() == 0 && page.getReadBit() == 0) ||
-                    (page.getModificationBit() == 1 && page.getReadBit() == 0) ||
-                    page.getModificationBit() ==0 && page.getReadBit()==1 ||
-                    page.getModificationBit() == 1 && page.getReadBit() == 1
-            ) {
-                int index = getFreeIndex(swapMemory);
-                swapMemory[index] = page;
-                page.setIndexAtSwapMemory(index);
-                page.setIndexAtPhysicalMemory(-1);
-                page.setReadBit(-1);
-                page.setModificationBit(-1);
-                page.setPresenceAndAbsenseBit(0);
-                page.setDescription("loadedToSwap");
+            if(page.getModificationBit()==0&&page.getReadBit()==0){
+                swap(page);
+                return i;
+            }
+        }
+        for (int i = 0; i < physicalMemory.length; i++) {
+            Page page = physicalMemory[i];
+            if(page.getModificationBit()==1&&page.getReadBit()==0) {
+                swap(page);
+                return i;
+            }
+        }
+        for (int i = 0; i < physicalMemory.length; i++) {
+            Page page = physicalMemory[i];
+            if(page.getModificationBit()==0&&page.getReadBit()==1) {
+                swap(page);
+                return i;
+            }
+        }
+        for (int i = 0; i < physicalMemory.length; i++) {
+            Page page = physicalMemory[i];
+            if(page.getModificationBit()==1&&page.getReadBit()==1) {
+                swap(page);
                 return i;
             }
         }
         return -1;
+    }
+
+    private void swap(Page page) {
+        int index = getFreeIndex(swapMemory);
+        swapMemory[index] = page;
+        page.setIndexAtSwapMemory(index);
+        page.setIndexAtPhysicalMemory(-1);
+        page.setReadBit(0);
+        page.setModificationBit(0);
+        page.setPresenceAndAbsenseBit(0);
+        page.setDescription("loadedToSwap");
     }
 
     public void setVirtualMemoryOfCurrentProcess(Page[] virtualMemoryOfCurrentProcess) {
