@@ -38,7 +38,7 @@ public class MemoryManager {
             }
             physicalMemory[index] = pageBlock;
         }
-        pageBlock.setPresenceAndAbsenseBit(1);
+        pageBlock.setPresenceAndAbsenceBit(1);
         pageBlock.setIndexAtPhysicalMemory(index);
         pageBlock.setIndexAtSwapMemory(-1);
         pageBlock.setDescription("loadedToRAM");
@@ -74,7 +74,7 @@ public class MemoryManager {
 
     private void initPageInPhysicalMemory(Page pageBlock, int index) {
         physicalMemory[index] = pageBlock;
-        pageBlock.setPresenceAndAbsenseBit(1);
+        pageBlock.setPresenceAndAbsenceBit(1);
         pageBlock.setIndexAtPhysicalMemory(index);
         pageBlock.setIndexAtSwapMemory(-1);
         pageBlock.setDescription("loadedToRAM");
@@ -138,7 +138,7 @@ public class MemoryManager {
         page.setIndexAtPhysicalMemory(-1);
         page.setReadBit(0);
         page.setModificationBit(0);
-        page.setPresenceAndAbsenseBit(0);
+        page.setPresenceAndAbsenceBit(0);
         page.setDescription("loadedToSwap");
     }
 

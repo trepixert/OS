@@ -14,7 +14,7 @@ public class Processor {
 
     /**
      * Операция чтения. Эти операции придется вбивать ручками в
-     * @see Schedule#start()
+     * @see Scheduler#start()
      * Ищет страницу по переданному индексу, проверяет бит присутствия и отсутствия и индекс в ОЗУ
      * (ибо, когда процесс инициализируется, то там рандомным образом некоторым страницам устанавливается бит присутствия и
      * отсутствия)
@@ -29,7 +29,7 @@ public class Processor {
 
     public void read(int indexOfVirtualMemory) throws Exception{
         Page page = virtualMemoryOfCurrentProcess[indexOfVirtualMemory];
-        if (page.getPresenceAndAbsenseBit()==1) {
+        if (page.getPresenceAndAbsenceBit()==1) {
             if(page.getIndexAtPhysicalMemory()== -1){
                 memoryManager.setToPhysicalMemory(indexOfVirtualMemory);
             }
@@ -49,7 +49,7 @@ public class Processor {
      */
     public void write(int indexOfVirtualMemory, String description) throws Exception {
         Page page = virtualMemoryOfCurrentProcess[indexOfVirtualMemory];
-        if (page.getPresenceAndAbsenseBit()==1) {
+        if (page.getPresenceAndAbsenceBit()==1) {
             if(page.getIndexAtPhysicalMemory()== -1){
                 memoryManager.setToPhysicalMemory(indexOfVirtualMemory);
             }

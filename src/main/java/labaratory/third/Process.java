@@ -33,7 +33,7 @@ public class Process {
             Page page = virtualMemory[i];
             page.setProcessName(processName);
             if (random.nextBoolean() && (countOfNeededPages > 0)) {
-                page.setPresenceAndAbsenseBit(1);
+                page.setPresenceAndAbsenceBit(1);
                 countOfNeededPages--;
             }
         }

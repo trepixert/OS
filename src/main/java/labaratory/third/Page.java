@@ -6,7 +6,7 @@ public class Page {
     private int readOrWriteBit;
     private int indexAtPhysicalMemory;
     private int indexAtSwapMemory;
-    private int presenceAndAbsenseBit;
+    private int presenceAndAbsenceBit;
     private String description;
 
     public Page() {
@@ -41,20 +41,16 @@ public class Page {
         this.indexAtPhysicalMemory = indexAtPhysicalMemory;
     }
 
-    public int getIndexAtSwapMemory() {
-        return indexAtSwapMemory;
-    }
-
     public void setIndexAtSwapMemory(int indexAtSwapMemory) {
         this.indexAtSwapMemory = indexAtSwapMemory;
     }
 
-    public int getPresenceAndAbsenseBit() {
-        return presenceAndAbsenseBit;
+    public int getPresenceAndAbsenceBit() {
+        return presenceAndAbsenceBit;
     }
 
-    public void setPresenceAndAbsenseBit(int presenceAndAbsenseBit) {
-        this.presenceAndAbsenseBit = presenceAndAbsenseBit;
+    public void setPresenceAndAbsenceBit(int presenceAndAbsenceBit) {
+        this.presenceAndAbsenceBit = presenceAndAbsenceBit;
     }
 
     public String getDescription() {
@@ -63,10 +59,6 @@ public class Page {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getProcessName() {
-        return processName;
     }
 
     public void setProcessName(String processName) {
@@ -81,7 +73,7 @@ public class Page {
                 ", readOrWriteBit=" + readOrWriteBit +
                 ", indexAtPhysicalMemory=" + indexAtPhysicalMemory +
                 ", indexAtSwapMemory=" + indexAtSwapMemory +
-                ", presenceAndAbsenseBit=" + presenceAndAbsenseBit +
+                ", presenceAndAbsenceBit=" + presenceAndAbsenceBit +
                 ", description='" + description + '\'' +
                 '}';
     }

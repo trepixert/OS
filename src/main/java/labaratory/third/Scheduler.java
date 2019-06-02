@@ -1,24 +1,23 @@
 package labaratory.third;
 
-import java.util.Scanner;
 import java.util.Random;
+import java.util.Scanner;
 
-public class Schedule {
+public class Scheduler {
     private Processor processor;
     private MemoryManager memoryManager;
-    private Process processes;
     private Random random = new Random();
 
-    public Schedule() {
+    public Scheduler() {
         processor = new Processor();
         memoryManager = new MemoryManager();
-        processes = null;
     }
 
     /**
      * в этом методе, мы управляем страницами процесса, загрузкой их страниц в ОЗУ (да, придется пальчикам вбивать,
      * можете сделать автоматическое заполнение в ОЗУ тех страницы, у которых в 1 отмечен бит присутствия-отсутствия)
      * reset - сбросить бит модификации и чтения
+     *
      * @see MemoryManager#resetAllBits()
      * printing all - выведет содержимое ОЗУ, Swap и виртуальной памяти текущего процесса
      * @see MemoryManager#printPhysicalMemory()
@@ -40,11 +39,11 @@ public class Schedule {
                 "5: continue - continue\n" +
                 "6: quit - quit");
 
-        Process[] processes = new Process[random.nextInt(3)+1];
+        Process[] processes = new Process[random.nextInt(3) + 1];
         try (Scanner scanner = new Scanner(System.in)) {
             for (Process process : processes) {
                 process = new Process();
-                process.setProcessName("Процесс: "+process.getId());
+                process.setProcessName("Процесс: " + process.getId());
                 process.run();
                 Page[] refToVirtualMemoryOfCurrentProcess = process.getVirtualMemory();
                 processor.setVirtualMemoryOfCurrentProcess(refToVirtualMemoryOfCurrentProcess);
@@ -72,8 +71,8 @@ public class Schedule {
                             processor.write(scanner.nextInt(), scanner.next());
                             break;
                         case "continue":
-                             condition = false;
-                             break;
+                            condition = false;
+                            break;
                         case "quit":
                             return;
                     }
@@ -85,6 +84,6 @@ public class Schedule {
     }
 
     public static void main(String[] args) {
-        new Schedule().start();
+        new Scheduler().start();
     }
 }
