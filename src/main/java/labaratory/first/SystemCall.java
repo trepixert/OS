@@ -1,7 +1,10 @@
 package labaratory.first;
 
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 class SystemCall {
 	private String name;
 	private String description;
@@ -11,17 +14,5 @@ class SystemCall {
 		this.name = name;
 		this.description = description;
 		this.args = args;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public List<Argument> getArgs() {
-		return args;
-	}
-
-	public String getDescription() {
-		return description;
 	}
 }

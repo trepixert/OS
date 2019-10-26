@@ -1,6 +1,7 @@
 package labaratory.fourth;
 
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 public class PhysicalMemoryTable {
     private static PhysicalMemoryTable instance = new PhysicalMemoryTable();
@@ -18,9 +19,7 @@ public class PhysicalMemoryTable {
         memoryBlocks = new ArrayList<>();
 
         numberOfFreeBlocks = CAPACITY / BLOCK_SIZE;
-        for (int i = 0; i < CAPACITY / BLOCK_SIZE; i++) {
-            memoryBlocks.add(new MemoryBlock(null));
-        }
+        IntStream.range(0, CAPACITY / BLOCK_SIZE).forEach(i -> memoryBlocks.add(new MemoryBlock(null)));
     }
 
     public static PhysicalMemoryTable getInstance() {

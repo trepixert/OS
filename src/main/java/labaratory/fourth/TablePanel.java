@@ -3,6 +3,7 @@ package labaratory.fourth;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 public class TablePanel extends JPanel {
 
@@ -26,15 +27,13 @@ public class TablePanel extends JPanel {
     protected void paintComponent(Graphics gh) {
         ArrayList<MemoryBlock> memoryBlocks = physicalMemoryTable.getMemoryBlocks();
 
-        for (int i = 0; i < memoryBlocks.size(); i++) {
+        IntStream.range(0, memoryBlocks.size()).forEach(i -> {
             int rowIndex = i / columnsCount;
             int columnIndex = i % columnsCount;
-
             int y = sizeCell * rowIndex;
             int x = sizeCell * columnIndex;
-
             drawCell(gh, x, y, memoryBlocks.get(i).getState());
-        }
+        });
 
         drawGrid(gh, sizeCell);
     }
@@ -42,21 +41,17 @@ public class TablePanel extends JPanel {
     private void drawGrid(Graphics drp, int sizeCell) {
         drp.setColor(Color.BLACK);
 
-        for (int i = 0; i < columnsCount; i++) {
-            drp.drawLine(i * sizeCell, 0, i * sizeCell, rowsCount * sizeCell);
-        }
+        IntStream.range(0, columnsCount)
+                .forEach(i -> drp.drawLine(i * sizeCell, 0, i * sizeCell, rowsCount * sizeCell));
 
-        for (int i = 0; i < rowsCount; i++) {
-            drp.drawLine(0, i * sizeCell, columnsCount * sizeCell, i * sizeCell);
-        }
+        IntStream.range(0, rowsCount)
+                .forEach(i -> drp.drawLine(0, i * sizeCell, columnsCount * sizeCell, i * sizeCell));
 
-        for (int i = 0; i <= lastRowBlocks; i++) {
-            drp.drawLine(0, sizeCell * rowsCount, i * sizeCell, sizeCell * rowsCount);
-        }
+        IntStream.rangeClosed(0, lastRowBlocks)
+                .forEach(i -> drp.drawLine(0, sizeCell * rowsCount, i * sizeCell, sizeCell * rowsCount));
 
-        for (int i = 0; i <= lastRowBlocks; i++) {
-            drp.drawLine(i * sizeCell, sizeCell * rowsCount, i * sizeCell, sizeCell * rowsCount + sizeCell);
-        }
+        IntStream.rangeClosed(0, lastRowBlocks)
+                .forEach(i -> drp.drawLine(i * sizeCell, sizeCell * rowsCount, i * sizeCell, sizeCell * rowsCount + sizeCell));
     }
 
     private void drawCell(Graphics drp, int x, int y, MemoryBlockStatus state) {

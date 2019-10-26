@@ -33,7 +33,7 @@ public class Processor {
             if(page.getIndexAtPhysicalMemory()== -1){
                 memoryManager.setToPhysicalMemory(indexOfVirtualMemory);
             }
-            page.setReadBit(1);
+            page.setReadOrWriteBit(1);
             System.out.println(page.getDescription());
         } else {
             memoryManager.setToPhysicalMemory(indexOfVirtualMemory);

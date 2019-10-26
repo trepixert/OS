@@ -1,5 +1,8 @@
 package labaratory.first;
 
+import lombok.Data;
+
+@Data
 class Argument {
     private Class argument;
     private String name;
@@ -11,13 +14,5 @@ class Argument {
         this.argument = argument;
         this.name = name;
         this.description = description;
-    }
-
-    public Class getArgument() {
-        return argument;
-    }
-
-    public String getDescription() {
-        return description;
     }
 }

@@ -1,5 +1,9 @@
 package labaratory.third;
 
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.IntStream;
+
 public class MemoryManager {
     public static final int RAM_SIZE = 32768;
     public static final int PAGE_SIZE = 4096;
@@ -86,12 +90,7 @@ public class MemoryManager {
      * @return индекс свободной ячейки
      */
     private int getFreeIndex(Page[] memory) {
-        for (int i = 0; i < memory.length; i++) {
-            if (memory[i] == null) {
-                return i;
-            }
-        }
-        return -1;
+        return IntStream.range(0, memory.length).filter(i -> memory[i] == null).findFirst().orElse(-1);
     }
 
     /**
@@ -102,28 +101,28 @@ public class MemoryManager {
     private int swapProcess() {
         for (int i = 0; i < physicalMemory.length; i++) {
             Page page = physicalMemory[i];
-            if(page.getModificationBit()==0&&page.getReadBit()==0){
+            if(page.getModificationBit()==0&&page.getReadOrWriteBit()==0){
                 swap(page);
                 return i;
             }
         }
         for (int i = 0; i < physicalMemory.length; i++) {
             Page page = physicalMemory[i];
-            if(page.getModificationBit()==1&&page.getReadBit()==0) {
+            if(page.getModificationBit()==1&&page.getReadOrWriteBit()==0) {
                 swap(page);
                 return i;
             }
         }
         for (int i = 0; i < physicalMemory.length; i++) {
             Page page = physicalMemory[i];
-            if(page.getModificationBit()==0&&page.getReadBit()==1) {
+            if(page.getModificationBit()==0&&page.getReadOrWriteBit()==1) {
                 swap(page);
                 return i;
             }
         }
         for (int i = 0; i < physicalMemory.length; i++) {
             Page page = physicalMemory[i];
-            if(page.getModificationBit()==1&&page.getReadBit()==1) {
+            if(page.getModificationBit()==1&&page.getReadOrWriteBit()==1) {
                 swap(page);
                 return i;
             }
@@ -136,7 +135,7 @@ public class MemoryManager {
         swapMemory[index] = page;
         page.setIndexAtSwapMemory(index);
         page.setIndexAtPhysicalMemory(-1);
-        page.setReadBit(0);
+        page.setReadOrWriteBit(0);
         page.setModificationBit(0);
         page.setPresenceAndAbsenceBit(0);
         page.setDescription("loadedToSwap");
@@ -155,25 +154,18 @@ public class MemoryManager {
 
     public void printSwapMemory() {
         System.out.println("Содержимое файла подкачки:");
-        for (Page page : swapMemory) {
-            System.out.println(page);
-        }
+        Arrays.stream(swapMemory).forEach(System.out::println);
     }
 
     public void printVirtualMemoryOfCurrentProcess(){
         System.out.println("Содержимое виртуальной памяти");
-        for (Page memoryOfCurrentProcess : virtualMemoryOfCurrentProcess) {
-            System.out.println(memoryOfCurrentProcess);
-        }
+        Arrays.stream(virtualMemoryOfCurrentProcess).forEach(System.out::println);
     }
 
     public void resetAllBits(){
-        for (int i = 0; i < physicalMemory.length; i++) {
-            Page page = physicalMemory[i];
-            if(page != null) {
-                page.setModificationBit(0);
-                page.setReadBit(0);
-            }
-        }
+        Arrays.stream(physicalMemory).filter(Objects::nonNull).forEach(page -> {
+            page.setModificationBit(0);
+            page.setReadOrWriteBit(0);
+        });
     }
 }

@@ -70,13 +70,7 @@ public class Process {
     }
 
     private int getSize() {
-        int size = 0;
-        for (Thread thread : threads) {
-            if (thread.isFinished())
-                continue;
-            size++;
-        }
-        return size;
+        return (int) threads.stream().filter(thread -> !thread.isFinished()).count();
     }
 
     public boolean isFinished() {

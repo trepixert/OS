@@ -1,6 +1,7 @@
 package labaratory.third;
 
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class Process {
     private static int getId = 0;
@@ -28,7 +29,7 @@ public class Process {
      * Инициализация виртуальной памяти процесса
      */
     private void fillVirtualMemory() {
-        for (int i = 0; i < virtualMemory.length; i++) {
+        IntStream.range(0, virtualMemory.length).forEach(i -> {
             virtualMemory[i] = new Page();
             Page page = virtualMemory[i];
             page.setProcessName(processName);
@@ -36,7 +37,7 @@ public class Process {
                 page.setPresenceAndAbsenceBit(1);
                 countOfNeededPages--;
             }
-        }
+        });
     }
 
     public void setProcessName(String processName) {

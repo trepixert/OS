@@ -1,8 +1,10 @@
 package labaratory.first;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.IntStream;
 
 class Kernel {
     private SystemCall[] systemCalls;
@@ -32,7 +34,7 @@ class Kernel {
                                     new Argument(Class.forName("java.lang.Byte"), "byte", "Count of byte to write")
                             )),
                     new SystemCall("close", "using for close file after some operations",
-                            Arrays.asList(
+                            Collections.singletonList(
                                     new Argument(Class.forName("java.io.File"), "file", "File to close")
                             )),
                     new SystemCall("mkdir", "using for create directory",
@@ -69,24 +71,21 @@ class Kernel {
      * @return the result of checking
      */
     private boolean checkToCorrectArgsTypes(List<Argument> args) {
-        for (int i = args.size() - 1; i >= 0; i--) {
-            if (!(argumentStack.pop().equals(args.get(i).getArgument())))
-                return false;
-        }
-        return true;
+        return IntStream.iterate(args.size() - 1, i -> i >= 0, i -> i - 1)
+                .allMatch(i -> argumentStack.pop().equals(args.get(i).getArgument()));
     }
 
     /**
      * output all system calls
      */
     public void printAllSysCalls() {
-        for (int i = 0; i < systemCalls.length; i++) {
-            System.out.println(String.format(
-                    "Идентификатор: %d\n" +
-                            "Имя метода: %s\n" +
-                            "Аргументы: %s",
-                    i, systemCalls[i].getName(), getParams(systemCalls[i].getArgs())));
-        }
+        IntStream.range(0, systemCalls.length)
+                .mapToObj(i -> String.format(
+                "Идентификатор: %d\n" +
+                        "Имя метода: %s\n" +
+                        "Аргументы: %s",
+                i, systemCalls[i].getName(), getParams(systemCalls[i].getArgs())))
+                .forEach(System.out::println);
     }
 
     /**
@@ -97,9 +96,7 @@ class Kernel {
      */
     private String getParams(List<Argument> params) {
         StringBuilder sb = new StringBuilder();
-        for (Argument arg : params) {
-            sb.append(arg.getArgument().getName()).append(" ");
-        }
+        params.forEach(arg -> sb.append(arg.getArgument().getName()).append(" "));
         return new String(sb);
     }
 }

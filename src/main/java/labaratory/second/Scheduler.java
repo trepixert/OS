@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class Scheduler {
     public static final int TIME_FOR_PROCESS = 5;
@@ -25,12 +26,10 @@ public class Scheduler {
 
     public void run() {
         Process[] processes = new Process[random.nextInt(5) + 1];
-        for (Process process :
-                processes) {
-            Thread[] threads = new Thread[random.nextInt(3) + 1];
-            for (int i = 0; i < threads.length; i++) {
-                threads[i] = new Thread(++threadID, random.nextInt(5) + 1);
-            }
+        for (Process process : processes) {
+            Thread[] threads = IntStream.range(0, random.nextInt(3) + 1)
+                    .mapToObj(i -> new Thread(++threadID, random.nextInt(5) + 1))
+                    .toArray(Thread[]::new);
             process = new Process(++processID, Priority.getAttribute((random.nextInt(3) + 1)));
             process.setTime(TIME_FOR_PROCESS * process.getPriority().getPriorityNumber());
             process.setThreads(Arrays.asList(threads));
@@ -38,17 +37,11 @@ public class Scheduler {
             threadID = 0;
         }
         while (true) {
-            for (Process process : this.processes) {
-                if (!process.isFinished()) {
-                    process.startProcess();
-                }
-            }
-            boolean check = true;
-            for (Process process : this.processes) {
-                if (!process.isFinished()) {
-                    check = false;
-                }
-            }
+            this.processes.stream()
+                    .filter(process -> !process.isFinished())
+                    .forEach(Process::startProcess);
+            boolean check = this.processes.stream()
+                    .allMatch(Process::isFinished);
             if (check) break;
         }
     }
